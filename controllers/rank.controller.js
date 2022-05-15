@@ -44,9 +44,12 @@ rankController.getRank = catchAsync(async (req, res, next) => {
             } else {
                 score = Number(sortedWeight[0].weight) - Number(sortedWeight[6].weight);
             }
+        } else {
+            score = weights[0].bodyFat;
         }
         return { ...e, score };
     });
+
     // get score array by score
     const sortedByScore = weightStorageWithScore.slice().sort(function (a, b) {
         return goalCategory === "gain" ? b.score - a.score : goalCategory === "lose" ? a.score - b.score : null;
@@ -55,6 +58,8 @@ rankController.getRank = catchAsync(async (req, res, next) => {
     const ranks = sortedByScore.map((v) => {
         return { ...v, rank: sortedByScore.indexOf(v) + 1 };
     });
+
+    // console.log(ranks);
     return sendResponse(res, 200, true, { ranks, totalPages }, null, "");
 });
 
